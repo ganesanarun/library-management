@@ -7,10 +7,13 @@ namespace Catalog_Server.EventBus
     {
         [JsonProperty] public Guid EventId { get; private set; }
 
+        [JsonProperty] public string Version { get; private set; }
+
         [JsonConstructor]
         public BaseMessage(Guid eventId)
         {
             EventId = eventId;
+            Version = "v1";
         }
     }
 }

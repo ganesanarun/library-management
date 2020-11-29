@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Search_Server.Books;
 using Search_Server.ElasticSearch;
 
 namespace Search_Server
@@ -22,6 +23,8 @@ namespace Search_Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<BookChangeEventHandler>();
+            services.AddSingleton<EventConsumer>();
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -34,9 +37,10 @@ namespace Search_Server
                 });
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ListBooks", builder => builder.RequireRole("member", "admin"));
+                options.AddPolicy(Constants.ListBooksPolicy, builder => builder.RequireRole("member", "admin"));
             });
-            services.AddElasticSearch(configuration);
+            services.AddRabbitMq(configuration).AddElasticSearch(configuration);
+
             services.AddControllers();
             AddCustomSwaggerGen(services);
         }
@@ -57,6 +61,7 @@ namespace Search_Server
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRabbitListener();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

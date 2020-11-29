@@ -12,7 +12,6 @@ namespace Search_Server.Books
     public class BooksController
     {
         private readonly ElasticClient elasticClient;
-        private const string BooksIndex = "books";
         private const short MaxPageSize = 200;
 
         public BooksController(ElasticClient elasticClient)
@@ -20,7 +19,7 @@ namespace Search_Server.Books
             this.elasticClient = elasticClient;
         }
 
-        [Authorize(Policy = "ListBooks")]
+        [Authorize(Policy = Search_Server.Constants.ListBooksPolicy)]
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(BooksRepresentation), StatusCodes.Status200OK)]
@@ -31,7 +30,7 @@ namespace Search_Server.Books
             [FromQuery(Name = "size")] short size = MaxPageSize)
         {
             var pageSize = Math.Min(size, MaxPageSize);
-            var searchResponse = await elasticClient.SearchAsync<Book>(s => s.Index(BooksIndex)
+            var searchResponse = await elasticClient.SearchAsync<Book>(s => s.Index(Constants.IndexName)
                 .From(from)
                 .Take(pageSize));
 
