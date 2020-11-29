@@ -22,7 +22,7 @@ namespace Identity_Server
                         new Claim(JwtClaimTypes.FamilyName, "Smith"),
                         new Claim(JwtClaimTypes.Email, "John@gmail.com"),
                         new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                        new Claim(JwtClaimTypes.Role, "Member")
+                        new Claim(JwtClaimTypes.Role, "member")
                     }
                 },
                 new TestUser
@@ -37,7 +37,7 @@ namespace Identity_Server
                         new Claim(JwtClaimTypes.FamilyName, "Smith"),
                         new Claim(JwtClaimTypes.Email, "John@gmail.com"),
                         new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                        new Claim(JwtClaimTypes.Role, "Admin")
+                        new Claim(JwtClaimTypes.Role, "admin")
                     }
                 }
             };

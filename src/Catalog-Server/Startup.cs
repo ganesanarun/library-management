@@ -13,6 +13,8 @@ namespace Catalog_Server
 {
     public class Startup
     {
+        private const string RoleAdmin = "admin";
+
         private readonly IConfiguration configuration;
 
         public Startup(IConfiguration configuration)
@@ -35,10 +37,10 @@ namespace Catalog_Server
                 });
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("GetBook", builder => builder.RequireRole("Admin"));
-                options.AddPolicy("AddBook", builder => builder.RequireRole("Admin"));
-                options.AddPolicy("UpdateBook", builder => builder.RequireRole("Admin"));
-                options.AddPolicy("DeleteBook", builder => builder.RequireRole("Admin"));
+                options.AddPolicy("GetBook", builder => builder.RequireRole(RoleAdmin));
+                options.AddPolicy("AddBook", builder => builder.RequireRole(RoleAdmin));
+                options.AddPolicy("UpdateBook", builder => builder.RequireRole(RoleAdmin));
+                options.AddPolicy("DeleteBook", builder => builder.RequireRole(RoleAdmin));
             });
             services.AddDbContext<BookContext>(options => options.UseInMemoryDatabase("Books"))
                 .AddControllers();

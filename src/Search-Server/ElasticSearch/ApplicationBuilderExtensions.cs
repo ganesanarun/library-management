@@ -10,7 +10,7 @@ namespace Search_Server.ElasticSearch
         public static IServiceCollection AddElasticSearch(this IServiceCollection services,
             in IConfiguration configuration)
         {
-            var elasticUrl = configuration.GetSection("Search:Elastic:Url")?.Value;
+            var elasticUrl = configuration.GetSection("Search:Elastic:Url")?.Value ?? "http://localhost:9200";
             var node = new Uri(elasticUrl);
             var settings = new ConnectionSettings(node);
             var client = new ElasticClient(settings);
