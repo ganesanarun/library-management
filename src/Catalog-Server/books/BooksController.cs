@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Catalog_Server.EventBus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace Catalog_Server.books
     public class BooksController
     {
         private readonly BookContext bookContext;
+        private readonly IEventBus<BookChangeEvent> eventBus;
 
-        public BooksController(BookContext bookContext)
+        public BooksController(BookContext bookContext, IEventBus<BookChangeEvent> eventBus)
         {
             this.bookContext = bookContext;
+            this.eventBus = eventBus;
         }
 
         [Authorize(Policy = "GetBook")]
@@ -40,6 +43,7 @@ namespace Catalog_Server.books
         {
             var aBook = await bookContext.Books.AddAsync(book.ToBook());
             await bookContext.SaveChangesAsync();
+            await eventBus.Publish(new BookChangeEvent(Guid.NewGuid(), ChangeType.Created, aBook.Entity));
 
             return new CreatedAtActionResult(nameof(GetABookWith),
                 "Books",
@@ -61,6 +65,7 @@ namespace Catalog_Server.books
 
             mayBeBook.Author = book.Author;
             mayBeBook.Name = book.Name;
+            await eventBus.Publish(new BookChangeEvent(Guid.NewGuid(), ChangeType.Updated, mayBeBook));
 
             bookContext.Entry(mayBeBook).State = EntityState.Modified;
             await bookContext.SaveChangesAsync();
@@ -81,6 +86,7 @@ namespace Catalog_Server.books
 
             bookContext.Books.Remove(mayBeBook);
             await bookContext.SaveChangesAsync();
+            await eventBus.Publish(new BookChangeEvent(Guid.NewGuid(), ChangeType.Deleted, id));
             return new NoContentResult();
         }
     }

@@ -19,11 +19,31 @@ services:
       - 9200:9200
     networks:
       - elastic
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    volumes:
+      - rabbitData:/etc/rabbitmq/
+      - rabbitEtc:/var/lib/rabbitmq/
+      - rabbitLogs:/var/log/rabbitmq/
+    networks:
+      - app-tier
+    ports:
+      - 5672:5672
+      - 15672:15672
 
 volumes:
   data01:
     driver: local
+  rabbitData:
+    driver: local
+  rabbitEtc:
+    driver: local
+  rabbitLogs:
+    driver: local
 
 networks:
   elastic:
+    driver: bridge
+  app-tier:
     driver: bridge

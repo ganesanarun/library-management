@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Catalog_Server.books;
+using Catalog_Server.EventBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using RabbitMQ.Client;
 
 namespace Catalog_Server
 {
@@ -25,6 +30,7 @@ namespace Catalog_Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRabbitMq(configuration);
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -44,7 +50,12 @@ namespace Catalog_Server
             });
             services.AddDbContext<BookContext>(options => options.UseInMemoryDatabase("Books"))
                 .AddControllers();
-            services.AddSwaggerGen(c =>
+            AddCustomSwaggerGen(services);
+        }
+
+        private static IServiceCollection AddCustomSwaggerGen(IServiceCollection services)
+        {
+            return services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
