@@ -8,6 +8,7 @@ using IdentityServer4.Test;
 
 namespace Identity_Server
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ProfileService : IProfileService
     {
         private readonly TestUserStore users;
@@ -32,17 +33,17 @@ namespace Identity_Server
                 var mayBeRoleClaim = mayBeUser.Claims.FirstOrDefault(claim => claim.Type == JwtClaimTypes.Role);
                 if (mayBeRoleClaim != null) context.IssuedClaims.Add(mayBeRoleClaim);
 
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             }
             catch
             {
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             }
         }
 
         public Task IsActiveAsync(IsActiveContext context)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }
