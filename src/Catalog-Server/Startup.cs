@@ -44,12 +44,16 @@ namespace Catalog_Server
                 .AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog_Server", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Catalog Server",
+                    Version = "v1",
+                    Description = "Service would maintain the list of books being kept in the library"
+                });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                    Description = @"JWT Authorization header using the Bearer scheme.
                       Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\n
                       Example: 'Bearer token'",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
