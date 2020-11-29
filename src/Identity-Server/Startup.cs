@@ -10,11 +10,12 @@ namespace Identity_Server
         {
             services
                 .AddIdentityServer(options => { options.EmitStaticAudienceClaim = true; })
-                .AddDeveloperSigningCredential(persistKey: false)
+                .AddDeveloperSigningCredential(false)
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
-                .AddTestUsers(TestUsers.Users);
+                .AddTestUsers(TestUsers.Users)
+                .AddProfileService<ProfileService>();
         }
 
         public void Configure(IHostEnvironment env, IApplicationBuilder app)
