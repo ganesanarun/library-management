@@ -1,0 +1,322 @@
+{
+	"info": {
+		"_postman_id": "0e548f55-862c-4177-8ce3-26d558d34115",
+		"name": "Library-Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "STEP 0 OPENID WELL KNOWN CONFIGURATION",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/.well-known/openid-configuration",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						".well-known",
+						"openid-configuration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STEP 1 GET ACCESS TOKEN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "85997f3a-1906-45b9-9906-05f48bf056f5",
+						"exec": [
+							"",
+							"pm.test(\"SET BEARER TOKEN\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.globals.set(\"BEARER_TOKEN\", jsonData.access_token);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "Postman",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "admin@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Password@1234",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "role profile openid library",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:5001/connect/token",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STEP 2 GET USER INFO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{BEARER_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjZENTc0N0ZFNkU2NDM2MDM2N0Y3QUJFNzYxNzA4RjFEIiwidHlwIjoiYXQrand0In0.eyJuYmYiOjE2MDY0NzA2MTQsImV4cCI6MTYwNjQ3NDIxNCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEvcmVzb3VyY2VzIiwiY2xpZW50X2lkIjoiUG9zdG1hbiIsInN1YiI6IjgxODcyNyIsImF1dGhfdGltZSI6MTYwNjQ3MDYxNCwiaWRwIjoibG9jYWwiLCJqdGkiOiJFREQ0MzM4QkY0Q0U5NzlEODFFODE4QkVDOEExMDQ3MyIsImlhdCI6MTYwNjQ3MDYxNCwic2NvcGUiOlsib3BlbmlkIl0sImFtciI6WyJwd2QiXX0.r1Qqi5BgJQElqYZo7rNPDo8dJPTJAc-97es_Ulxkhvyw6b0_x7Dq3AHuMucVTSWAm-iZAeJKZGuOBxGjcrnGzxDAlEJIuph1aJ3FRHt7VHah0g5GQU0GPWc90lNlNzzzO0pOTUHHkoaJMt51ls4AMUF-y5OffNqm7YSmXsMeOcPKM5r9PtFKkzrZ3561qD85UhXqXumlvkjaMwHg8WDk9FPBy_IlJIFJmhchV4UhjO_8T5f3U8j-a0rdVJNVIQOmZxaQn5x9boeauvLHz-kzcp56qsJytwHD1ZAWgHewE6ucmWVcsDdFEH42njuYSYRLFKwJQpLHzh415uAx0HubjQ",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://localhost:5001/connect/userinfo",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"connect",
+						"userinfo"
+					]
+				},
+				"description": "TO CHECK THE ROLE OF THE USER and OTHER INFO."
+			},
+			"response": []
+		},
+		{
+			"name": "STEP 4 CREATE A BOOK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c292665-7309-4925-9400-4d2e91b5d0e0",
+						"exec": [
+							"pm.test(\"SET BOOK ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.globals.set(\"BOOK_ID\", jsonData.id);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{BEARER_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{$randomCompanyName}}\",\n    \"author\": \"{{$randomFullName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5002/v1/books",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"v1",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STEP 5 GET A BOOK",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{BEARER_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5002/v1/Books/{{BOOK_ID}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"v1",
+						"Books",
+						"{{BOOK_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STEP 6 LIST BOOKS",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{BEARER_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5003/v1/Books",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"v1",
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STEP 7 UPDATE A BOOK",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{BEARER_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{$randomCompanyName}}\",\n    \"author\": \"{{$randomFullName}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5002/v1/Books/{{BOOK_ID}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"v1",
+						"Books",
+						"{{BOOK_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "STEP 8 DELETE A BOOK",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{BEARER_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5002/v1/books/{{BOOK_ID}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"v1",
+						"books",
+						"{{BOOK_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
